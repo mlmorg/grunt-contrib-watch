@@ -44,7 +44,11 @@ module.exports = function(grunt) {
     if (self.tasks.length < 1) { return done(); }
 
     if (self.options.spawn === false || self.options.nospawn === true) {
-      grunt.task.run(self.tasks);
+      if (typeof self.tasks === 'function') {
+        self.tasks.call(this, Object.keys(this.changedFiles));
+      } else {
+        grunt.task.run(self.tasks);
+      }
       done();
     } else {
       self.spawned = grunt.util.spawn({
